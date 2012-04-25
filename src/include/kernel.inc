@@ -11,8 +11,7 @@
 .equ kernel_code            0x0000
 .equ kernel_memory          0x1000
     ; kernel_memory breakdown
-    .equ base_hw_clock          kernel_memory
-    .equ proc_table             base_hw_clock + 1
+    .equ proc_table             kernel_memory
         .equ proc_entry_length      2
         .equ max_proccesses         8
         .equ proc_table_length      proc_entry_length * max_proccesses
@@ -42,6 +41,9 @@
             .equ driver_entry_message   1
             .equ driver_entry_id        2
             .equ driver_entry_address   3
+            
+    ; the following items start at the end of kernel memory and grow backwards
+    .equ base_hw_clock          os_bootloader - 1
             
 .equ os_bootloader          0x1500
 .equ userspace_memory       0x2000
