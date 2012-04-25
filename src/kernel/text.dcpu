@@ -1,0 +1,121 @@
+; 0x42c text.dcpu
+; April 24th, 2012
+; Licensed with the MIT license.
+; Provides text-based subroutines for programs.
+
+; TODO: Use a different routine (I took this from some routines I had elsewhere)
+; =====Output Text=====
+; Inputs:
+; A: Pointer to zero-delimited string
+; X,Y: Coordinates
+:outputText
+    mul y, 32
+    add x, y
+    set c, 0
+    ; x is offset from 0x8000
+:textLoop
+    set b, [a]
+    ife b, 0xA
+        set pc, handleNewLine
+    add a, 1
+    ife b, 0
+        set pc, pop
+    ifg b, 0x100
+        set pc, textColorChange
+    and b, 0xFF
+    and c, 0xFF00
+    bor c, b
+    ifg x, 0x8200
+        jsr textScroll
+    set [0x8000+x], c
+    add x, 1
+    set pc, textLoop
+
+:textColorChange
+    shl b, 8
+    and c, 0xFF00
+    bor c, b
+    set pc, textLoop
+    
+:handleNewLine
+    jsr newLine
+    add a, 1
+    set pc, textLoop
+    
+:textScroll
+    sub x, 32
+    set push, a
+    set push, x
+    set push, b
+        set a, 1
+        jsr scrollTerm
+    set b, pop
+    set x, pop
+    set a, pop
+    set pc, pop
+    
+; =====New Line=====
+:newLine
+    div x, 32 ; X=0
+    mul x, 32 ; ...
+    add x, 32 ; Y+=1
+    set pc, pop
+    
+; =====Scroll Terminal=====
+; Inputs:
+; A: Number of lines to scroll
+:scrollTerm
+    set b, 0x8000 ; Destination
+    mul a, 32
+    add a, 0x8000 ; Target
+:scrollTerm_loop
+    set [b], [a]
+    add a, 1
+    add b, 1
+    ifg a, 0x8200
+        set pc, pop
+    set pc, scrollTerm_loop
+    
+; =====Clear Screen=====
+:clearScreen
+    set i, sp
+    set sp, 0x8200
+:clearScreen_loop
+    set push, 0
+    set push, 0
+    set push, 0
+    set push, 0
+    set push, 0
+    set push, 0
+    set push, 0
+    set push, 0
+    set push, 0
+    set push, 0
+    set push, 0
+    set push, 0
+    set push, 0
+    set push, 0
+    set push, 0
+    set push, 0
+    set push, 0
+    set push, 0
+    set push, 0
+    set push, 0
+    set push, 0
+    set push, 0
+    set push, 0
+    set push, 0
+    set push, 0
+    set push, 0
+    set push, 0
+    set push, 0
+    set push, 0
+    set push, 0
+    set push, 0
+    set push, 0
+    ifg 0x8000, sp
+        set pc, clearScreen_done
+    set pc, clearScreen_loop
+:clearScreen_done
+    set sp, i
+    set pc, pop

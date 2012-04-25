@@ -1,0 +1,28 @@
+; 0x42c base.dcpu
+; April 24th, 2012
+; Licensed with the MIT license.
+; Base assembly file for 0x42c's kernel
+
+#include <kernel.inc>
+
+; Set aside some space for the jump table
+    SET PC, kernel_start
+kernel_jump_table:
+    .fill 0x100, 0 ; 0x50 subroutines possible
+    ; TODO: Add .export to .orgASM
+    ; TODO: Write custom tool to patch in jump table automatically
+
+#include "boot.dcpu"
+
+#include "interrupts.dcpu"
+#include "memory.dcpu"
+
+#include "procserv.dcpu"
+#include "libraries.dcpu"
+#include "semaphores.dcpu"
+
+#include "text.dcpu"
+#include "graphics.dcpu"
+#include "util.dcpu"
+
+kernel_end:

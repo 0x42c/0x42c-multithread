@@ -1,0 +1,8 @@
+; 0x42c memory.dcpu
+; April 24th, 2012
+; Licensed with the MIT license.
+; Contains subroutines for memory management.
+
+kernel_format_mem:
+    ; TODO
+    SET PC, POP

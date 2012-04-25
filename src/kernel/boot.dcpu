@@ -1,0 +1,33 @@
+; 0x42c boot.dcpu
+; April 24th, 2012
+; Licensed with the MIT license.
+; Boots up the device and passes control to the OS.
+
+kernel_reboot:
+kernel_start:
+    ; Initialize basic hardware
+    ; TODO
+    
+    ; Format memory
+    JSR kernel_format_mem
+    
+    ; Mount internal filesystem
+    ; TODO: Write custom tool for patching filesystem into dump
+    ; TODO
+    ; TODO: Replace this with disk I/O method?
+    
+    ; Load up /bin/boot
+    ; TODO
+    
+    ; Start interrupts and launch OS
+    ;SET PC, kernel_interrupt
+    
+    ; TEMPORARY TEST CODE
+    JSR clearScreen
+    SET X, 0
+    SET Y, 0
+    SET A, kernel_message
+    JSR outputText
+    
+kernel_message:
+    .asciiz "Hello, world!"
