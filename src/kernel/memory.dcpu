@@ -4,16 +4,8 @@
 ; Contains subroutines for memory management.
 
 kernel_format_mem:
-    set push, b
-    set [a], 0xffff ; owner of free mem
-    add a, 1
-    sub b, a
-    set [a], b      ; space available
-    set b, pop
-    sub a, 1
-    set [b], a
-    
-    set pc, pop
+    ; TODO
+    SET PC, POP
 
 kernel_free:
     sub a, 2 ; user gives the first allocated word, header is two words back  
@@ -149,3 +141,15 @@ kernel_malloc:
         add a, 2 ; real start of memory
         set i, pop
         set pc, pop
+        
+kernel_set_initial_blocks:
+    set push, b
+    set [a], 0xffff ; owner of free mem
+    add a, 1
+    sub b, a
+    set [a], b      ; space available
+    set b, pop
+    sub a, 1
+    set [b], a
+    
+    set pc, pop
