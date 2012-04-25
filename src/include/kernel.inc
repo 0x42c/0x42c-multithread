@@ -11,7 +11,8 @@
 .equ kernel_code            0x0000
 .equ kernel_memory          0x1000
     ; kernel_memory breakdown
-    .equ proc_table             kernel_memory
+    .equ base_hw_clock          kernel_memory
+    .equ proc_table             base_hw_clock + 1
         .equ proc_entry_length      2
         .equ max_proccesses         8
         .equ proc_table_length      proc_entry_length * max_proccesses
@@ -37,7 +38,7 @@
         .equ max_drivers            32
         .equ driver_table_length    driver_entry_length * max_drivers
             ; driver table breakdown
-            .equ driver_entry_int       0
+            .equ driver_entry_int       0 ; Interrupt handler
             .equ driver_entry_message   1
             .equ driver_entry_id        2
             .equ driver_entry_address   3

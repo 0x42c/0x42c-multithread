@@ -6,7 +6,39 @@
 kernel_reboot:
 kernel_start:
     ; Initialize basic hardware
-    ; TODO
+    
+    ; Search for a compatible clock
+    HWN I
+    SET [enumerate_hardware + 1], I ; SMC
+    SET I, 0
+enumerate_hardware:
+    IFE I, 0xFFFF ; Changes to number of connected devices
+    SET PC, enumerate_hardware_nonefound
+    SET J, clock_driver_table
+hw_searchloop:
+    IFE J, clock_driver_table_end
+    SET PC, enumerate_hardware
+    HWQ I
+    IFN A, [J]
+    SET PC, hw_searchloop_continue
+    ADD J, 1
+    IFN B, [J]
+    SET PC, hw_searchloop_continue + 2 ; TODO: when optimized literals make it back into .orgASM, fix this
+    ; Compatible driver found
+    SET PC, clock_found
+    
+hw_searchloop_continue:
+    ADD J, 1
+    ADD J, 2
+    SET PC, hw_searchloop
+    
+enumerate_hardware_nonefound:
+    ; TODO: attempt to locate display and show a message
+    SET PC, $
+    
+clock_found:
+    SET [base_hw_clock], I
+    JSR J ; Run initialization for the selected clock driver
     
     ; Format memory
     JSR kernel_format_mem
@@ -30,3 +62,9 @@ kernel_start:
 
 :end
     SET PC, end
+    
+clock_driver_table: ; Special drivers for setting up the clock
+    ; TODO: Bloody forward-referencing
+    ;.dw 0x1234, 0x5678, clock_model_a
+    ; No clock specs have been released, we will support them as released
+clock_driver_table_end:

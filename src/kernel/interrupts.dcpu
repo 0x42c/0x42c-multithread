@@ -15,9 +15,11 @@ kernel_interrupt:
     SET PUSH, Z
     SET PUSH, EX
     
-    ; Context switch
-    ; TODO
+identify_device:
+    IFE A, [base_hw_clock]
+    SET PC, kernel_context_switch
     
+kernel_interrupt_resume:
     ; Pop all registers and return
     SET EX, POP
     SET Z, POP
@@ -31,3 +33,6 @@ kernel_interrupt:
     ; Re-enable interrupts
     IAS kernel_interrupt
     SET PC, POP
+    
+kernel_context_switch:
+    SET PC, kernel_interrupt_resume
