@@ -8,8 +8,8 @@ kernel_start:
     ; Initialize basic hardware
     
     ; Search for a compatible clock
-    HWN I
-    SET [enumerate_hardware + 1], I ; SMC
+    HWN A
+    SET [enumerate_hardware + 1], A ; SMC
     SET I, 0
 enumerate_hardware:
     IFE I, 0xFFFF ; Changes to number of connected devices
