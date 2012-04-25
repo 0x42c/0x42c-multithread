@@ -16,6 +16,7 @@ kernel_jump_table:
 
 #include "interrupts.dcpu"
 #include "memory.dcpu"
+#include "drivers.dcpu"
 
 #include "procserv.dcpu"
 #include "libraries.dcpu"
