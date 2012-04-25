@@ -76,7 +76,5 @@ clock_driver_generic:
     SET PC, POP
     
 clock_driver_table: ; Special drivers for setting up the clock.  These mini-drivers initialize the clock hardware to send interrupts that work with our interrupt system.
-    ; TODO: Bloody forward-referencing
     .dw 0x12d0, 0xb402, clock_driver_generic
-    ; No clock specs have been released, we will support them as released
 clock_driver_table_end:

@@ -7,6 +7,7 @@ kernel_format_mem:
     ; TODO
     SET PC, POP
 
+; Arguments: A -> the pointer to the first block of allocated memory
 kernel_free:
     sub a, 2 ; user gives the first allocated word, header is two words back  
     set [a], 0xffff ; free memory
@@ -69,6 +70,8 @@ kernel_free:
         set a, pop
         set pc, pop
 
+; Arguments: A -> Number of words. B -> Owner of memory.
+; Returns: (A == 0) -> unable to allocate memory. (A != 0) -> pointer to the allocated memory
 kernel_malloc:
     set push, i
     set i, userspace_memory
