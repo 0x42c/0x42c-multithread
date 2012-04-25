@@ -48,6 +48,8 @@
 
     ; the following items start at the end of kernel memory and grow backwards
     .equ base_hw_clock          os_bootloader - 1
+    .equ current_thread_id      base_hw_clock - 1
+    .equ total_loaded_threads   current_thread_id - 1
 
 #ifdef ENABLE_STATS
     .echo "---Kernel Memory Usage: ", driver_table + driver_table_length - kernel_memory, "/", 0x500, "words"

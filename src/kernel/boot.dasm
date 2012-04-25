@@ -5,6 +5,9 @@
 
 kernel_reboot:
 kernel_start:
+    ; Initialize the temporary boot stack
+    SET SP, userspace_memory_end - 2 ; A and PC, theoritically
+
     ; Initialize basic hardware
     
     ; Search for a compatible clock
@@ -44,23 +47,21 @@ clock_found:
     ; Format memory
     JSR kernel_format_mem
     
-    ; Mount internal filesystem
-    ; TODO: Write custom tool for patching filesystem into dump
-    ; TODO
-    ; TODO: Replace this with disk I/O method?
+    ; Load up OS bootloader
+    ; TODO: Write custom tool to patch bootloader in seperately
+    SET I, [os_bootloader] ; stack size
+    ADD I, min_proc_stack
+    SET A, I
+    SET B, [current_thread_id]
+    ;JSR kernel_malloc
+    ADD I, [os_bootloader]
+    ; I is SP for bootloader
     
-    ; Load up /bin/boot
-    ; TODO
+    ; TODO: Start bootloader process
     
-    ; Initialize the stack TEMP CODE
-    SET SP, userspace_memory_end - 2 ; A and PC, theoritically
-    
-    ; Start interrupts and launch OS
+    ; Start interrupts and pass control to bootloader
     SET A, [base_hw_clock]
     SET PC, kernel_interrupt
-
-    ; Pass control to the OS
-    ; TODO
 
 :end
     SET PC, end

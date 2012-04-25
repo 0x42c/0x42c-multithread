@@ -31,3 +31,9 @@ kernel_end:
 #ifdef ENABLE_STATS
 .echo "---Kernel size: ", kernel_end, "/", kernel_memory, " words"
 #endif
+
+; TEMPORARY: TODO: Create external program for patching in external bootloader
+    .align os_bootloader
+    .dw 10 ; stack size
+    SET PC, $
+    ; Bootloader should mount disks and such, then load up the OS.
