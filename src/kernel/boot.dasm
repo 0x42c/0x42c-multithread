@@ -30,6 +30,7 @@ hw_searchloop: ; Search the clock driver table for a compatible driver
 hw_searchloop_continue:
     ADD J, 1
     ADD J, 2
+    ADD I, 1
     SET PC, hw_searchloop
     
 enumerate_hardware_nonefound:
