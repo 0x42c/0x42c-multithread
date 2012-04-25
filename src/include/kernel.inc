@@ -43,7 +43,8 @@
             .equ driver_entry_id        2
             .equ driver_entry_address   3
             
-.equ os_bootloader          0x1500
+.equ os_bootloader          0x1800
+.equ os_interrupt_hook      0x1D00
 .equ userspace_memory       0x2000
 .equ userspace_memory_end   0xFFFF
 
@@ -53,5 +54,5 @@
     .equ total_loaded_threads   current_thread_id - 1
 
 #ifdef ENABLE_STATS
-    .echo "---Kernel Memory Usage: ", driver_table + driver_table_length - kernel_memory, "/", 0x500, "words"
+    .echo "---Kernel Memory Usage: ", driver_table + driver_table_length - kernel_memory, "/", 0x800, "words"
 #endif

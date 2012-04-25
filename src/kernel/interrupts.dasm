@@ -15,6 +15,12 @@ kernel_interrupt:
     SET PUSH, Z
     SET PUSH, EX
     
+    ; Run OS interrupt hook
+    SET Z, 1
+    JSR os_interrupt_hook
+    IFE Z, 0
+    SET PC, kernel_interrupt_resume
+    
 identify_device:
     IFE A, [base_hw_clock]
     SET PC, kernel_context_switch
