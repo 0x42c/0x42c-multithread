@@ -1,4 +1,4 @@
-; 0x42c base.dcpu
+; 0x42c base.dasm
 ; April 24th, 2012
 ; Licensed with the MIT license.
 ; Base assembly file for 0x42c's kernel
@@ -12,19 +12,19 @@ kernel_jump_table:
     ; TODO: Add .export to .orgASM
     ; TODO: Write custom tool to patch in jump table automatically
 
-#include "boot.dcpu"
+#include "boot.dasm"
 
-#include "interrupts.dcpu"
-#include "memory.dcpu"
-#include "drivers.dcpu"
+#include "interrupts.dasm"
+#include "memory.dasm"
+#include "drivers.dasm"
 
-#include "procserv.dcpu"
-#include "libraries.dcpu"
-#include "semaphores.dcpu"
+#include "procserv.dasm"
+#include "libraries.dasm"
+#include "semaphores.dasm"
 
-#include "text.dcpu"
-#include "graphics.dcpu"
-#include "util.dcpu"
+#include "text.dasm"
+#include "graphics.dasm"
+#include "util.dasm"
 
 kernel_end:
 
