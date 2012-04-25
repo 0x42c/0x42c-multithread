@@ -68,7 +68,7 @@ clock_found:
     ; TODO: move this to the other side of the table when forward references work
 clock_driver_generic:
     SET A, 0 ; Set clock speed
-    SET B, 1 ; 60 Hz
+    SET B, interrupts_frequency ; 60 Hz
     HWI [base_hw_clock]
     SET B, [base_hw_clock] ; Use device number for message
     SET A, 2 ; Enable interrupts

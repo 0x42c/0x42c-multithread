@@ -6,6 +6,7 @@
 ; Constant values
 ; TODO: backreferencing in directives for .orgASM
 .equ min_proc_stack     8
+.equ interrupts_frequency    1 ; 60 / 1 = 60Hz
 
 ; Memory Layout
 .equ kernel_code            0x0000
