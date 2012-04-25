@@ -21,3 +21,9 @@ kernel_start:
     
     ; Start interrupts and launch OS
     SET PC, kernel_interrupt
+
+    ; Pass control to the OS
+    ; TODO
+
+:end
+    SET PC, end
