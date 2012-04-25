@@ -20,7 +20,7 @@ kernel_start:
     ; TODO
     
     ; Initialize the stack TEMP CODE
-    SET SP, temp_kern_stack - 2 ; A and PC, theoritically
+    SET SP, userspace_memory_end - 2 ; A and PC, theoritically
     
     ; Start interrupts and launch OS
     SET PC, kernel_interrupt
