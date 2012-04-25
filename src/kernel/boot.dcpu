@@ -20,14 +20,4 @@ kernel_start:
     ; TODO
     
     ; Start interrupts and launch OS
-    ;SET PC, kernel_interrupt
-    
-    ; TEMPORARY TEST CODE
-    JSR clearScreen
-    SET X, 0
-    SET Y, 0
-    SET A, kernel_message
-    JSR outputText
-    
-kernel_message:
-    .asciiz "Hello, world!"
+    SET PC, kernel_interrupt

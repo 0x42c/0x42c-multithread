@@ -4,4 +4,30 @@
 ; Handles all interrupts.
 
 kernel_interrupt:
+    ING 0 ; Disable interrupts
+    ; Push all registers to the stack
+    SET PUSH, B
+    SET PUSH, C
+    SET PUSH, I
+    SET PUSH, J
+    SET PUSH, X
+    SET PUSH, Y
+    SET PUSH, Z
+    SET PUSH, EX
     
+    ; Context switch
+    ; TODO
+    
+    ; Pop all registers and return
+    SET EX, POP
+    SET Z, POP
+    SET Y, POP
+    SET X, POP
+    SET J, POP
+    SET I, POP
+    SET C, POP
+    SET B, POP
+    SET A, POP
+    ; Re-enable interrupts
+    ING kernel_interrupt
+    SET PC, POP
