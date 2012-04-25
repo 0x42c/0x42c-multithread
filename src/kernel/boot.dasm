@@ -9,7 +9,7 @@ kernel_start:
     
     ; Search for a compatible clock
     HWN A
-    SET [enumerate_hardware + 1], A ; SMC
+    SET [enumerate_hardware + 3], A ; SMC (fix when compressed literals are supported)
     SET I, -1 ; I is the hardware number being checked
 enumerate_hardware:
     ADD I, 1
