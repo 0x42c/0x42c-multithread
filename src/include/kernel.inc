@@ -42,12 +42,12 @@
             .equ driver_entry_id        2
             .equ driver_entry_address   3
             
-    ; the following items start at the end of kernel memory and grow backwards
-    .equ base_hw_clock          os_bootloader - 1
-            
 .equ os_bootloader          0x1500
 .equ userspace_memory       0x2000
 .equ userspace_memory_end   0xFFFF
+
+    ; the following items start at the end of kernel memory and grow backwards
+    .equ base_hw_clock          os_bootloader - 1
 
 #ifdef ENABLE_STATS
     .echo "---Kernel Memory Usage: ", driver_table + driver_table_length - kernel_memory, "/", 0x500, "words"
