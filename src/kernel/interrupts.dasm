@@ -35,4 +35,5 @@ kernel_interrupt_resume:
     SET PC, POP
     
 kernel_context_switch:
+    ; TODO: context switch
     SET PC, kernel_interrupt_resume
