@@ -7,7 +7,7 @@ kernel_format_mem:
     ; TODO
     SET PC, POP
 
-:free
+kernel_free:
     sub a, 2 ; user gives the first allocated word, header is two words back  
     set [a], 0xffff ; free memory
     set push, a
@@ -24,7 +24,7 @@ kernel_format_mem:
         set a, peek
         sub a, 1
         ifg a, userspace_memory
-            set pc free_check_backwards_continue
+            set pc, free_check_backwards_continue
             
         set pc, free_end
     
