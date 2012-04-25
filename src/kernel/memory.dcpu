@@ -142,7 +142,7 @@ kernel_malloc:
         set i, pop
         set pc, pop
 
-kernel_set_initial_blocks
+kernel_set_initial_blocks:
     set push, b
     set [a], 0xffff ; owner of free mem
     add a, 1
