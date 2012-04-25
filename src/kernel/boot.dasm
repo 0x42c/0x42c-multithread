@@ -56,6 +56,7 @@ clock_found:
     SET SP, userspace_memory_end - 2 ; A and PC, theoritically
     
     ; Start interrupts and launch OS
+    SET A, [base_hw_clock]
     SET PC, kernel_interrupt
 
     ; Pass control to the OS
@@ -64,8 +65,18 @@ clock_found:
 :end
     SET PC, end
     
-clock_driver_table: ; Special drivers for setting up the clock
+    ; TODO: move this to the other side of the table when forward references work
+clock_driver_generic:
+    SET A, 0 ; Set clock speed
+    SET B, 1 ; 60 Hz
+    HWI [base_hw_clock]
+    SET B, [base_hw_clock] ; Use device number for message
+    SET A, 2 ; Enable interrupts
+    HWI [base_hw_clock]
+    SET PC, POP
+    
+clock_driver_table: ; Special drivers for setting up the clock.  These mini-drivers initialize the clock hardware to send interrupts that work with our interrupt system.
     ; TODO: Bloody forward-referencing
-    ;.dw 0x1234, 0x5678, clock_model_a
+    .dw 0x12d0, 0xb402, clock_driver_generic
     ; No clock specs have been released, we will support them as released
 clock_driver_table_end:
