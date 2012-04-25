@@ -4,7 +4,7 @@
 ; Handles all interrupts.
 
 kernel_interrupt:
-    IAG 0 ; Disable interrupts
+    IAS 0 ; Disable interrupts
     ; Push all registers to the stack
     SET PUSH, B
     SET PUSH, C
