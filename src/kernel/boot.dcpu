@@ -19,8 +19,8 @@ kernel_start:
     ; Load up /bin/boot
     ; TODO
     
-    ; Initialize the stack
-    SET SP, temp_kern_stack - 10
+    ; Initialize the stack TEMP CODE
+    SET SP, temp_kern_stack - 2 ; A and PC, theoritically
     
     ; Start interrupts and launch OS
     SET PC, kernel_interrupt
