@@ -47,9 +47,5 @@
 .equ userspace_memory_end   0xFFFF
 
 #ifdef ENABLE_STATS
-    .echo "kernel_memory: ", kernel_memory
-    .echo "proc_table_length: ", proc_table_length
-    .echo "lib_table_length: ", lib_table_length
-    .echo "driver_table: ", driver_table_length
     .echo "---Kernel Memory Usage: ", driver_table + driver_table_length - kernel_memory, "/", 0x500, "words"
 #endif
