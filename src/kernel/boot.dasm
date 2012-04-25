@@ -10,8 +10,9 @@ kernel_start:
     ; Search for a compatible clock
     HWN A
     SET [enumerate_hardware + 1], A ; SMC
-    SET I, 0 ; I is the hardware number being checked
+    SET I, -1 ; I is the hardware number being checked
 enumerate_hardware:
+    ADD I, 1
     IFE I, 0xFFFF ; Changes to number of connected devices.  If we've checked all connected devices...
     SET PC, enumerate_hardware_nonefound ; ...then we didn't find a clock.
     SET J, clock_driver_table
@@ -30,7 +31,6 @@ hw_searchloop: ; Search the clock driver table for a compatible driver
 hw_searchloop_continue:
     ADD J, 1
     ADD J, 2
-    ADD I, 1
     SET PC, hw_searchloop
     
 enumerate_hardware_nonefound:
