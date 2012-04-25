@@ -3,8 +3,6 @@
 ; Licensed with the MIT license.
 ; Base assembly file for 0x42c's kernel
 
-;#define ENABLE_STATS
-
 #include <kernel.inc>
 
 ; Set aside some space for the jump table
