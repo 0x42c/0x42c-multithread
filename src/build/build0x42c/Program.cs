@@ -74,7 +74,7 @@ namespace build0x42c
             CreateOutput(Kernel, "../bin/kernel", "kernel");
 
             // Build bootloader
-            Console.WriteLine("Building 0x42c-kernel...");
+            Console.WriteLine("Building 0x42c-bootloader...");
             Directory.SetCurrentDirectory("../src/bootloader");
             Assembler bootloaderAssembler = new Assembler();
             bootloaderAssembler.IncludePath = "../include";
