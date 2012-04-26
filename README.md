@@ -1,4 +1,4 @@
 0x42c
 =====
 
-0x42c is an operating system and kernel for DCPU-16.  It is assembled with [.orgASM](https://github.com/SirCmpwn/.orgASM).  To build it yourself, use the appropriate script in /build.  If you're on Linux or Mac, install Mono first.  On Linux, this is usually the "mono-complete" package.
+0x42c is an operating system and kernel for DCPU-16.  It is assembled with [DCPU-16 Toolchain](https://github.com/DCPUTeam/DCPUToolchain).  To build it yourself, use either the appropriate script in /build or clone it into a folder called "kernel.mt" inside the folder where you have cloned DCPU-16 Toolchain and build it as part of CMake.
