@@ -35,6 +35,10 @@ namespace build0x42c
                         case "-r":
                             generateReports = true;
                             break;
+                        case "--big-endian":
+                        case "-b":
+                            bigEndian = true;
+                            break;
                         default:
                             Console.WriteLine("Invalid arguments.");
                             return;
