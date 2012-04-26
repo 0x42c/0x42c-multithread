@@ -24,15 +24,12 @@ hw_searchloop: ; Search the clock driver table for a compatible driver
     SET PC, enumerate_hardware ; ...then move on to the next hardware index
     HWQ I ; Get hardware info for this device
     IFN A, [J] ; compare it to the current driver's ID
+    IFN B, [J + 1]
     SET PC, hw_searchloop_continue
-    ADD J, 1
-    IFN B, [J]
-    SET PC, hw_searchloop_continue + 2 ; TODO: when optimized literals make it back into .orgASM, fix this
     ; Compatible driver found
     SET PC, clock_found
     
 hw_searchloop_continue:
-    ADD J, 1
     ADD J, 2
     SET PC, hw_searchloop
     
