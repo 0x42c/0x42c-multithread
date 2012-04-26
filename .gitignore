@@ -1,11 +1,3 @@
 bin/
 *.bin
 *.lst
-CMakeFiles/*
-cmake_install.cmake
-Win32/*
-*.vcxproj.user
-*.sln
-*.vcxproj
-*.vcxproj.filters
-*.rule
