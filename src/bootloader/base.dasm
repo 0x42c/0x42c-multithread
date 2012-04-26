@@ -1,0 +1,11 @@
+; 0x42c-bootloader base.dasm
+; April 26th, 2012
+; Licensed with the MIT license.
+; Base assembly file for loading the OS
+
+#include <kernel.inc>
+    .org os_bootloader
+    ; Header
+    .dw 20 ; Stack Size
+    
+    SET PC, $ ; Temporary

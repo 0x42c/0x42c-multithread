@@ -1,4 +1,4 @@
-; 0x42c text.dcpu
+; 0x42c-kernel text.dcpu
 ; April 24th, 2012
 ; Licensed with the MIT license.
 ; Provides text-based subroutines for programs.
