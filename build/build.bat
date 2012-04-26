@@ -1,6 +1,2 @@
 @echo off
-IF EXIST ..\bin GOTO SKIPBINDIR
-mkdir ..\bin
-:SKIPBINDIR
-echo ====Building kernel...====
-orgASM.exe ../src/kernel/base.dasm --output-file ../bin/kernel.bin --listing ../bin/kernel.lst --include ../include --working-directory ../src/kernel
+build0x42c.exe

@@ -1,4 +1,4 @@
-; 0x42c base.dasm
+; 0x42c-kernel base.dasm
 ; April 24th, 2012
 ; Licensed with the MIT license.
 ; Base assembly file for 0x42c's kernel
@@ -27,13 +27,3 @@ kernel_jump_table:
 #include "util.dasm"
 
 kernel_end:
-
-#ifdef ENABLE_STATS
-.echo "---Kernel size: ", kernel_end, "/", kernel_memory, " words"
-#endif
-
-; TEMPORARY: TODO: Create external program for patching in external bootloader
-    .align os_bootloader
-    .dw 10 ; stack size
-    SET PC, $
-    ; Bootloader should mount disks and such, then load up the OS.

@@ -1,4 +1,4 @@
-; 0x42c memory.dcpu
+; 0x42c-kernel memory.dcpu
 ; April 24th, 2012
 ; Licensed with the MIT license.
 ; Contains subroutines for memory management.

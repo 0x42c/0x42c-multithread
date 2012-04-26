@@ -1,4 +1,4 @@
-; 0x42c drivers.dcpu
+; 0x42c-kernel drivers.dcpu
 ; April 25th, 2012
 ; Licensed with the MIT license.
 ; Provides support for managing drivers and interfacing with hardware.
