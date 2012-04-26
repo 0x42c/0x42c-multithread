@@ -45,7 +45,7 @@ clock_found:
     JSR J ; Run initialization for the selected clock driver
     
     ; Format memory
-    JSR kernel_format_mem
+    JSR kernel_set_initial_blocks
     
     ; Load up OS bootloader
     ; TODO: Write custom tool to patch bootloader in seperately
