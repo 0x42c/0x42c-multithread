@@ -21,7 +21,7 @@ enumerate_hardware:
     SET J, clock_driver_table
 hw_searchloop: ; Search the clock driver table for a compatible driver
     IFE J, clock_driver_table_end ; If we've reached the end of the driver table without finding a match...
-    SET PC, enumerate_hardware ; ...then move on to the next hardware index
+    SET PC, enumeratde_hardware ; ...then move on to the next hardware index
     HWQ I ; Get hardware info for this device
     IFN A, [J] ; compare it to the current driver's ID
     IFN B, [J + 1]
