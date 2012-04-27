@@ -156,8 +156,7 @@ namespace build0x42c
                 }
             }
             // Output errors/warnings to console
-            foreach (var entry in output.Where(o => o.WarningCode != WarningCode.None &&
-                o.ErrorCode != ErrorCode.Success))
+            foreach (var entry in output)
             {
                 if (entry.ErrorCode != ErrorCode.Success)
                 {

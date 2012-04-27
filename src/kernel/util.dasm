@@ -14,7 +14,7 @@ kernel_locate_device:
 	kernel_locate_enum:
 		ADD I, 1
 		IFE I, 0xFFFF ; Changes to number of connected devices.  If we've checked all connected devices...
-			SET PC, enumerate_hardware_nonefound ; ...then we didn't find a clock.
+			SET PC, locate_none_found ; ...then we didn't find a clock.
 		SET J, PEEK
 		
 	hw_searchloop: ; Search the clock driver table for a compatible driver
