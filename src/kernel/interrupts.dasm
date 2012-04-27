@@ -35,10 +35,7 @@ kernel_interrupt_resume:
     SET I, POP
     SET C, POP
     SET B, POP
-    SET A, POP
-    ; Re-enable interrupts
-    IAS kernel_interrupt
-    SET PC, POP
+    RFI 0 ; return from interrupt
     
 kernel_context_switch:
     ; TODO: context switch
