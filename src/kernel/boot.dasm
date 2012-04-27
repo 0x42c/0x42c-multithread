@@ -11,35 +11,21 @@ kernel_start:
     ; Initialize basic hardware
     
     ; Search for a compatible clock
-    HWN A
-    SET [enumerate_hardware + 3], A ; SMC (fix when compressed literals are supported)
-    SET I, -1 ; I is the hardware number being checked
-enumerate_hardware:
-    ADD I, 1
-    IFE I, 0xFFFF ; Changes to number of connected devices.  If we've checked all connected devices...
-    SET PC, enumerate_hardware_nonefound ; ...then we didn't find a clock.
-    SET J, clock_driver_table
-hw_searchloop: ; Search the clock driver table for a compatible driver
-    IFE J, clock_driver_table_end ; If we've reached the end of the driver table without finding a match...
-    SET PC, enumeratde_hardware ; ...then move on to the next hardware index
-    HWQ I ; Get hardware info for this device
-    IFN A, [J] ; compare it to the current driver's ID
-    IFN B, [J + 1]
-    SET PC, hw_searchloop_continue
-    ; Compatible driver found
+    SET A, clock_driver_table
+    SET B, clock_driver_table_end
+    JSR kernel_locate_device
+    
+    IFE A, -1
+    	SET PC, clock_not_found
     SET PC, clock_found
     
-hw_searchloop_continue:
-    ADD J, 2
-    SET PC, hw_searchloop
-    
-enumerate_hardware_nonefound:
+clock_not_found:
     ; TODO: attempt to locate display and show a message
     SET PC, $
     
 clock_found:
-    SET [base_hw_clock], I
-    JSR J ; Run initialization for the selected clock driver
+    SET [base_hw_clock], A
+    JSR B ; Run initialization for the selected clock driver
     
     ; Format memory
     JSR kernel_set_initial_blocks
