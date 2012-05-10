@@ -65,3 +65,7 @@ and specifically a start process.  The header for a program is different:
 .asciip "Description" ; Pascal string
 .dw meta_name
 .asciip "Demo"
+
+At load-time, the entire program is copied into RAM, and just the startup process is
+relocated.  You may forcibly relocate an additional process without starting it by using
+the kernel routine "kern_relocate"
