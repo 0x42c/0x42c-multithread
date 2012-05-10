@@ -1,4 +1,4 @@
-; 0x42c-kernel boot.dcpu
+; 0x42c-kernel boot.dasm
 ; April 24th, 2012
 ; Licensed with the MIT license.
 ; Boots up the device and passes control to the OS.

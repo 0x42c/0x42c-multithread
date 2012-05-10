@@ -1,4 +1,4 @@
-; 0x42c-kernel util.dcpu
+; 0x42c-kernel util.dasm
 ; April 24th, 2012
 ; Licensed with the MIT license.
 ; Provides various subroutines.

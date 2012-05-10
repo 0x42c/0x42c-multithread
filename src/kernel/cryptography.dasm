@@ -1,0 +1,4 @@
+; 0x42c-kernel cryptography.dcpu
+; May 9th, 2012
+; Licensed with the MIT license.
+; Provides routines for SHA-1 hashing and AES disk encrpytion

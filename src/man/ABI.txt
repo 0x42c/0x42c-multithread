@@ -1,0 +1,67 @@
+===0x42c ABI===
+Last Updated: May 9th, 2012
+Licensed with the MIT license.
+
+The following standards shall be used for 0x42c code, and is strongly reccomended for
+all 0x42c programs as well.  This is a living document while the kernel is still in
+development.  Many standards are taken from the 0x10c standards committee ABI.
+
+---Subroutine Function
+Subroutines should generally be called with the first three arguments in A, B, and C,
+respectively.  These registers are free to be manipulated by the subroutine.
+Generally, all other registers should preserve their values during execution of the
+subroutine, saving of course SP, PC, and EX.  Additional arguments should be pushed to
+the stack in right-to-left order.  When the subroutine returns from execution, it is
+caller's responsibility to clean the stack of any pushed values.
+
+Example function call: func(1, 2, 3, 4, 5)
+
+SET A, 1    ; First three arguments to A-C
+SET B, 2
+SET C, 3
+SET PUSH, 5 ; Remaining to stack
+SET PUSH, 4
+JSR func    ; JSR to function
+ADD SP, 2   ; Clean up the stack
+
+func:   ; It is reccomended that functions use the stack for local variables
+        ; Use of registers A-C is also permissible.
+SUB SP, 5 ; Allocate 5 words of space for local use
+SET [0x8000], A ; First argument, 1
+SET [0x8001], B ; Second argument, 2
+SET [0x8003], C ; Third argument, 3
+SET [0x8004], [SP+5] ; Fourth argument, 4
+SET [0x8005], [SP+6] ; Fifth argument, 5
+
+ADD SP, 5 ; Clean up local variables from the stack
+SET PC, POP
+
+---Process Execution
+A process is started in 0x42c-kernel by allocating it space in RAM, relocating it,
+allocating it a stack, and creating an entry in the process table.  In 0x42c-kernel,
+a header is required on each program (this example is in organic assembly format):
+
+; Header
+.dw 30                      ; Words of stack space required
+.dw reloc_end-reloc_start   ; The size of the relocation table
+reloc_start:
+    ; The relocation table is an array of words, each one representing a pointer
+    ; (relative to the process) of each word to be relocated (i.e. have the actual
+    ; address added to the existing value).
+reloc_end:
+
+The header is not copied with the rest of the process.  Note the difference between a
+process and a program - a process is simply code that may be allocated time in the
+kernel.  A program, on the other hand, is a file that contains one or more processes,
+and specifically a start process.  The header for a program is different:
+
+; Program header
+#include <0x42c.inc>
+.dw 0x42c                   ; Magic number
+.dw startup_process         ; Pointer to first word of the startup process header
+; Metadata - Metadata is in the form of key and value, where each key is a word and each
+; is a string.  You may have any metadata you wish, but certain keys are used by the OS.
+.dw meta_description
+.asciip "Description" ; Pascal string
+.dw meta_name
+.asciip "Demo"
