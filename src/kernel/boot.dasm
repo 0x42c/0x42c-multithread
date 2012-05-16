@@ -21,7 +21,7 @@ kernel_start:
     
 clock_not_found:
     ; TODO: attempt to locate display and show a message
-    SET PC, $
+    SET PC, clock_not_found
     
 clock_found:
     SET [base_hw_clock], A
@@ -49,7 +49,11 @@ clock_found:
 :end
     SET PC, end
     
-    ; TODO: move this to the other side of the table when forward references work
+; Special drivers for setting up the clock.  These mini-drivers initialize the clock hardware to send interrupts that work with our interrupt system.
+clock_driver_table:
+    .dw 0x12d0, 0xb402, clock_driver_generic
+clock_driver_table_end:
+    
 clock_driver_generic:
     SET A, 0 ; Set clock speed
     SET B, interrupts_frequency ; 60 Hz
@@ -58,7 +62,3 @@ clock_driver_generic:
     SET A, 2 ; Enable interrupts
     HWI [base_hw_clock]
     SET PC, POP
-    
-clock_driver_table: ; Special drivers for setting up the clock.  These mini-drivers initialize the clock hardware to send interrupts that work with our interrupt system.
-    .dw 0x12d0, 0xb402, clock_driver_generic
-clock_driver_table_end:

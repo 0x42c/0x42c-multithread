@@ -9,7 +9,7 @@
     SET PC, kernel_start
 kernel_jump_table:
     .fill 0x100, 0 ; 0x50 subroutines possible
-    ; TODO: Add .export to .orgASM
+    ; TODO: Add .export to organic?
     ; TODO: Write custom tool to patch in jump table automatically
 
 #include "boot.dasm"

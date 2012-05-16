@@ -4,7 +4,6 @@
 ; Internal kernel include file for 0x42c
 
 ; Constant values
-; TODO: backreferencing in directives for .orgASM
 .equ min_proc_stack         8
 .equ interrupts_frequency   1 ; 60 / 1 = 60Hz
 
