@@ -18,8 +18,6 @@ kernel_jump_table:
 #include "memory.dasm"
 #include "drivers.dasm"
 
-#include "drivers/base.dasm"
-
 #include "procserv.dasm"
 #include "libraries.dasm"
 #include "semaphores.dasm"

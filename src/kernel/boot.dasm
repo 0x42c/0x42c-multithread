@@ -9,15 +9,24 @@ kernel_start:
     SET SP, userspace_memory_end - 2 ; A and PC, theoritically
 
     ; Initialize basic hardware
-    
+    SET I, 0
     ; Search for a compatible clock
-    SET A, clock_driver_table
-    SET B, clock_driver_table_end
-    JSR kernel_locate_device
+    .loop: 
+        SET A, [clock_driver_table+I]
+        ADD I, 1
+        SET B, [clock_driver_table+I]
+        JSR kernel_locate_device
     
-    IFE A, -1
-    	SET PC, clock_not_found
-    SET PC, clock_found
+        
+        IFN A, -1
+    	    SET PC, clock_found
+        
+        ADD I, 2 ; next entry
+        
+        ;IFG [clock_driver_table+I], clock_driver_table_end
+        ;    SET PC, clock_not_found
+        
+        SET PC, .loop
     
 clock_not_found:
     ; TODO: attempt to locate display and show a message
@@ -25,7 +34,8 @@ clock_not_found:
     
 clock_found:
     SET [base_hw_clock], A
-    JSR B ; Run initialization for the selected clock driver
+    ADD I, 1
+    JSR [clock_driver_table+I] ; Run initialization for the selected clock driver
     
     ; Format memory
     JSR kernel_set_initial_blocks
@@ -51,6 +61,7 @@ clock_found:
     
 ; Special drivers for setting up the clock.  These mini-drivers initialize the clock hardware to send interrupts that work with our interrupt system.
 clock_driver_table:
+    .dw 0xd0e5, 0xbabe, clock_driver_generic ; bogus driver, the device does not exist
     .dw 0x12d0, 0xb402, clock_driver_generic
 clock_driver_table_end:
     
