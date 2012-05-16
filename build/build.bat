@@ -1,2 +1,2 @@
 @echo off
-build0x42c.exe
+build0x42c.exe --little-endian

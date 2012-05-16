@@ -11,7 +11,7 @@ namespace build0x42c
     {
         static bool generateReports = false;
         static string startupDirectory;
-        static bool bigEndian = false;
+        static bool bigEndian = true;
         static ushort kernelSize, bootloaderSize;
 
         static List<ListEntry> Kernel;
@@ -35,9 +35,9 @@ namespace build0x42c
                         case "-r":
                             generateReports = true;
                             break;
-                        case "--big-endian":
-                        case "-b":
-                            bigEndian = true;
+                        case "--little-endian":
+                        case "-l":
+                            bigEndian = false;
                             break;
                         default:
                             Console.WriteLine("Invalid arguments.");
@@ -68,6 +68,7 @@ namespace build0x42c
             Console.WriteLine("Building 0x42c-kernel...");
             Directory.SetCurrentDirectory("../src/kernel");
             Assembler kernelAssembler = new Assembler();
+            kernelAssembler.ForceLongLiterals = true;
             kernelAssembler.IncludePath = "../include";
             using (StreamReader sr = new StreamReader("base.dasm"))
             {
@@ -81,6 +82,7 @@ namespace build0x42c
             Console.WriteLine("Building 0x42c-bootloader...");
             Directory.SetCurrentDirectory("../src/bootloader");
             Assembler bootloaderAssembler = new Assembler();
+            kernelAssembler.ForceLongLiterals = true;
             bootloaderAssembler.IncludePath = "../include";
             using (StreamReader sr = new StreamReader("base.dasm"))
             {

@@ -1,4 +1,0 @@
-; 0x42c-kernel drivers/ex2.dasm
-; April 24th, 2012
-; Licensed with the MIT license.
-; Driver for interfacing with an ex2 filesystem.

@@ -1,7 +1,0 @@
-; 0x42c-kernel drivers/base.dasm
-; April 24th, 2012
-; Licensed with the MIT license.
-; Base assembly file for built in drivers
-
-#include "drivers/disk.dasm"
-#include "drivers/ex2.dasm" ; TODO: Organic: Make include files relative to the current file
