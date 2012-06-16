@@ -8,34 +8,28 @@ kernel_locate_device:
 	SET PUSH, B
 
 	HWN A
-    SET [kernel_locate_enum + 3], A ; SMC (fix when compressed literals are supported)
+    SET [kernel_locate_enum + 3], A ; SMC 
     SET I, -1 ; I is the hardware number being checked
     
 	kernel_locate_enum:
-		ADD I, 1
-		IFE I, 0xFFFF ; Changes to number of connected devices.  If we've checked all connected devices...
+        ADD I, 1
+		IFG I, 0xFFFF ; Changes to number of connected devices.  If we've checked all connected devices...
 			SET PC, locate_none_found ; ...then we didn't find a clock.
-		SET J, PEEK
 		
 	hw_searchloop: ; Search the clock driver table for a compatible driver
-		IFE J, [SP + 1] ; If we've reached the end of the driver table without finding a match...
-			SET PC, kernel_locate_enum ; ...then move on to the next hardware index
 		HWQ I ; Get hardware info for this device
-		IFN A, [J] ; compare it to the current driver's ID
-			IFN B, [J + 1]
-				SET PC, hw_searchloop_continue
+		IFE A, PEEK ; compare it to the current driver's ID
+			IFE B, PICK 1 
+				SET PC, locate_found ; Found the ID!
 		
-		; Compatible driver found
-    	SET PC, clock_found
+		; Not found with index I
+    	SET PC, kernel_locate_enum
     
-	hw_searchloop_continue:
-		ADD J, 2
-		SET PC, hw_searchloop
-	
 	locate_none_found:
+        ADD SP, 2 ; get rid of the stack
 		SET A, -1
 		SET PC, POP
 	locate_found:
+        ADD SP, 2
 		SET A, I
-		SET B, J
 		SET PC, POP
