@@ -41,13 +41,13 @@
             .equ driver_entry_message   1
             .equ driver_entry_id        2
             .equ driver_entry_address   3
-            
+    
+.equ kernel_temp_mem        0x1100
+    .equ system_clock           kernel_temp_mem + 1
+    .equ current_thread_id      base_hw_clock + 1
+    .equ total_loaded_threads   current_thread_id + 1
+.equ kernel_temp_mem_end    0x1400
 .equ os_bootloader          0x1800
 .equ os_interrupt_hook      0x1D00
 .equ userspace_memory       0x2000
 .equ userspace_memory_end   0xFFFF
-
-    ; the following items start at the end of kernel memory and grow backwards
-    .equ base_hw_clock          os_bootloader - 1
-    .equ current_thread_id      base_hw_clock - 1
-    .equ total_loaded_threads   current_thread_id - 1

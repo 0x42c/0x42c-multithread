@@ -22,7 +22,7 @@ kernel_interrupt:
     SET PC, kernel_interrupt_resume
     
 identify_device:
-    IFE A, [base_hw_clock]
+    IFE A, [system_clock]
     SET PC, kernel_context_switch
     
 kernel_interrupt_resume:

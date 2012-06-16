@@ -5,7 +5,6 @@
 
 #include <kernel.inc>
 
-    ; Set aside some space for the jump table
     SET PC, kernel_start
 #include "jumptable.dasm"
     ; TODO: Add .export to organic?

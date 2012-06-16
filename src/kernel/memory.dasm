@@ -3,7 +3,7 @@
 ; Licensed with the MIT license.
 ; Contains subroutines for memory management.
 
-kernel_format_mem:
+kernel_format_userspace:
     ; TODO
     SET PC, POP
 

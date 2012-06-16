@@ -5,71 +5,61 @@
 
 kernel_reboot:
 kernel_start:
-    ; Initialize the temporary boot stack
-    SET SP, userspace_memory_end - 2 ; A and PC, theoritically
-
-    ; Initialize basic hardware
-    SET I, 0
-    ; Search for a compatible clock
-    .loop: 
-        SET A, [clock_driver_table+I]
-        ADD I, 1
-        SET B, [clock_driver_table+I]
-        JSR kernel_locate_device
+    SET SP, kernel_temp_mem_end
     
-        
-        IFN A, -1
-    	    SET PC, clock_found
-        
-        ADD I, 2 ; next entry
-        
-        ;IFG [clock_driver_table+I], clock_driver_table_end
-        ;    SET PC, clock_not_found
-        
-        SET PC, .loop
+    JSR kernel_format_userspace
+    JSR configure_system_clock
     
-clock_not_found:
-    ; TODO: attempt to locate display and show a message
-    SET PC, clock_not_found
+inf_loop:
+    SET PC, inf_loop
     
-clock_found:
-    SET [base_hw_clock], A
-    ADD I, 1
-    JSR [clock_driver_table+I] ; Run initialization for the selected clock driver
+; Identifies supported clock hardware and configures it
+configure_system_clock:
+    SET PUSH, X
+    SET PUSH, Y
     
-    ; Format memory
-    JSR kernel_set_initial_blocks
+    HWN B
+    SUB B, 1
+.loop:
+    IFE B, -1
+        SUB PC, 1 ; No clock connected means 0x42c-kernel cannot work, so we just crash forever
+    SET PUSH, B
+        HWQ B
+        SET C, clock_driver_table
+.search_drivers:
+        IFE [C], B
+            IFE [C + 1], A
+                SET PC, .device_found
+        ADD C, 3
+        IFN C, clock_driver_table_end
+           SET PC, .search_drivers 
+    SET B, POP
+    SUB B, 1
+    SET PC, .loop
     
-    ; Load up OS bootloader
-    ; TODO: Write custom tool to patch bootloader in seperately
-    SET I, [os_bootloader] ; stack size
-    ADD I, min_proc_stack
-    SET A, I
-    SET B, [current_thread_id]
-    ;JSR kernel_malloc
-    ADD I, [os_bootloader]
-    ; I is SP for bootloader
-    
-    ; TODO: Start bootloader process
-    
-    ; Start interrupts and pass control to bootloader
-    SET A, [base_hw_clock]
-    SET PC, kernel_interrupt
-
-:end
-    SET PC, end
-    
-; Special drivers for setting up the clock.  These mini-drivers initialize the clock hardware to send interrupts that work with our interrupt system.
-clock_driver_table:
-    .dw 0xd0e5, 0xbabe, clock_driver_generic ; bogus driver, the device does not exist
-    .dw 0x12d0, 0xb402, clock_driver_generic
-clock_driver_table_end:
-    
-clock_driver_generic:
-    SET A, 0 ; Set clock speed
-    SET B, interrupts_frequency ; 60 Hz
-    HWI [base_hw_clock]
-    SET B, [base_hw_clock] ; Use device number for message
-    SET A, 2 ; Enable interrupts
-    HWI [base_hw_clock]
+.device_found:
+    SET B, POP
+    SET [system_clock], B
+    ADD C, 2
+    JSR [C]
+    SET Y, POP
+    SET X, POP
     SET PC, POP
+    
+; A table of supported clock devices
+clock_driver_table:
+    .dat 0x12D0, 0xB402, configure_generic_clock
+clock_driver_table_end:
+
+; All clock drivers configure the clock to fire interrupts
+; as close to 30 Hz as possible
+.equ clock_frequency 30
+configure_generic_clock:
+    SET A, 0
+    SET B, 60 / clock_frequency
+    HWI [system_clock] ; Set frequency
+    SET A, 2
+    SET B, [system_clock]
+    HWI [system_clock] ; Set interrupt
+    SET PC, POP
+    
