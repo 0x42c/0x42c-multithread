@@ -5,20 +5,16 @@
 
 #include <kernel.inc>
 
-; Set aside some space for the jump table
+    ; Set aside some space for the jump table
     SET PC, kernel_start
-kernel_jump_table:
-    .fill 0x100, 0 ; 0x50 subroutines possible
+#include "jumptable.dasm"
     ; TODO: Add .export to organic?
-    ; TODO: Write custom tool to patch in jump table automatically
 
 #include "boot.dasm"
 
 #include "interrupts.dasm"
 #include "memory.dasm"
 #include "drivers.dasm"
-
-#include "drivers/base.dasm"
 
 #include "procserv.dasm"
 #include "libraries.dasm"

@@ -9,7 +9,7 @@ kernel_format_mem:
 
 ; Arguments: A -> the pointer to the first block of allocated memory
 kernel_free:
-    sub a, 2 ; user gives the first allocated word, header is two words back  
+    sub a, 2 ; user gives the first allocated word, header is two words back
     set [a], 0xffff ; free memory
     set push, a
     
@@ -42,7 +42,7 @@ kernel_free:
         add a, 1
         set b, [a]
         add a, b
-        add a, 2 
+        add a, 2
                           
         set pc, free_merge_forward ; no need to check since we already know there's a blob of free memory there
         
@@ -99,7 +99,7 @@ kernel_malloc:
         add i, 1
         add i, [i] ; size of block
         
-        set pc, malloc_loop    
+        set pc, malloc_loop
         
     malloc_check_overhead:
         set push, b

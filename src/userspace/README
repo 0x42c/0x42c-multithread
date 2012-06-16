@@ -1,0 +1,9 @@
+The build tool goes through every subdirectory here and assembles everything called "base.dasm" and spits out "base.bin".
+It looks for "filesystem.config" and sticks files into a generated FAT-16 filesystem.  The boot sector is derived from
+"boot.dasm".  The format of filesystem.config is CSV - "localFile,generated location in filesystem".  For example, if you
+put filesystem.config in some subdirectory with a base.dasm file that looks like this:
+base.bin,/bin/boot
+The generated filesystem will stick "base.bin" in the file "/bin/boot" in the generated filesystem.  The filesystem will
+be dumped to /bin/filesystem/dump.iso.  If the build tool is given "--patchfs", then it will patch the ISO into the
+generated dump at 0xA000.  It'll also define "FSPATCH" when assembling the rest of the kernel/OS.  If you don't use
+"--patchfs", then it will instead define "FSDISK".

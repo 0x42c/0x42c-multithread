@@ -1,5 +1,5 @@
 @echo off
+build0x42c.exe
 cd debug
-build0x42c.exe --little-endian
-dtemu.exe ../../bin/dump/0x42c.bin
+lettuce.exe ../../bin/dump/0x42c.bin ../../bin/kernel/kernel.lst --connect LEM1802,GenericClock,GenericKeyboard
 cd ..
