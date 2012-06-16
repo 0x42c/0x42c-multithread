@@ -3,156 +3,67 @@
 ; Licensed with the MIT license.
 ; Contains subroutines for memory management.
 
+; void kernel_format_userspace()
 kernel_format_userspace:
-    ; TODO
+    SET [userspace_memory], -1
+    SET [userspace_memory + 1], 0xDFFD; userspace_memory_end - userspace_memory - 3 ; TODO: Organic bug here?
+    SET [userspace_memory_end], userspace_memory
     SET PC, POP
 
-; Arguments: A -> the pointer to the first block of allocated memory
-kernel_free:
-    sub a, 2 ; user gives the first allocated word, header is two words back
-    set [a], 0xffff ; free memory
-    set push, a
-    
-    free_check_forward:
-        add a, 1
-        set b, [a]
-        add a, b
-        add a, 2 ; next header
-        ife [a], 0xffff
-            set pc, free_merge_forward
-    
-    free_check_backwards:
-        set a, peek
-        sub a, 1
-        ifg a, userspace_memory
-            set pc, free_check_backwards_continue
-            
-        set pc, free_end
-    
-    free_check_backwards_continue:
-        ife [a], 0x0 ; if previous footer is empty
-            set pc, free_end
-        
-        set b, [a]
-        set a, b
-        ifn [a], 0xffff
-            set pc, free_end
-            
-        set peek, a ; the previous push is unnecesary
-        add a, 1
-        set b, [a]
-        add a, b
-        add a, 2
-                          
-        set pc, free_merge_forward ; no need to check since we already know there's a blob of free memory there
-        
-    free_merge_forward:
-        set [a], 0x0
-        add a, 1
-        set b, [a]
-        set c, b ; previous block length
-        set [a], 0x0
-        add a, b
-        ifn a, userspace_memory_end
-            add a, 1 ; footer of this block
-        set b, pop
-        set push, b ; we'll need it at the end
-        set [a], b
-        set a, b
-        add a, 1
-        set b, [a]
-        add b, c
-        add b, 3 ; considering overhead
-        set [a], b
-        set pc, free_end
-    
-    free_end:
-        set a, pop
-        set pc, pop
-
-; Arguments: A -> Number of words. B -> Owner of memory.
-; Returns: (A == 0) -> unable to allocate memory. (A != 0) -> pointer to the allocated memory
-kernel_malloc:
-    set push, i
-    set i, userspace_memory
-    
-    malloc_loop:
-        ife [i], 0xffff
-            set pc, malloc_found_free
-        
-        add i, 1
-        add i, [i]
-        add i, 2
-        
-        set pc, malloc_loop
-    malloc_found_free:
-        ife i, userspace_memory ; beginning
-            set pc, malloc_allocate
-        
-        add i, 1
-        
-        ife [i], a
-            set pc, malloc_prepare
-        ifg [i], a
-            set pc, malloc_check_overhead
-            
-        add i, 1
-        add i, [i] ; size of block
-        
-        set pc, malloc_loop
-        
-    malloc_check_overhead:
-        set push, b
-        set b, [i]
-        sub b, a
-        ifg b, 3 ; plenty of space for overhead
-            set pc, malloc_check_end
-        
-        sub i, 1
-        set b, pop
-        set [i], b ; it isn't worth dividing the space
-        set push, i
-        set pc, malloc_end
-        
-        malloc_check_end:
-            set b, pop
-            set pc, malloc_prepare    
-        
-    malloc_prepare:
-        sub i, 1
-        set pc, malloc_allocate
-        
-    malloc_allocate:
-        set push, i
-        set push, i
-        set [i], b
-        add i, 1
-        set [i], a
-        add i, 1
-        add i, a
-        set b, pop
-        set [i], b ; header pointer
-        
-        add i, 1
-        set a, i
-        set b, userspace_memory_end
-        jsr kernel_set_initial_blocks
-        set pc, malloc_end
-           
-    malloc_end:
-        set a, pop
-        add a, 2 ; real start of memory
-        set i, pop
-        set pc, pop
-        
-kernel_set_initial_blocks:
-    set push, b
-    set [a], 0xffff ; owner of free mem
-    add a, 1
-    sub b, a
-    set [a], b      ; space available
-    set b, pop
-    sub a, 1
-    set [b], a
-    
-    set pc, pop
+; uint16* alloc_mem(size)
+alloc_mem:
+    SET B, userspace_memory
+    ; Search for a free section that is large enough
+.loop:
+    IFE [B], -1
+        SET PC, .check_free
+    ADD B, [B + 1]
+    ADD B, 2
+    IFE B, 0
+        SET PC, .none_found
+    SET PC, .loop
+.none_found:
+    SET A, -1
+    SET PC, POP
+.check_free:
+    ADD B, 1
+    IFL A, [B]
+        SET PC, .do_allocate
+    ADD B, [B]
+    ADD B, 1
+    IFE B, 0
+        SET PC, .none_found
+    SET PC, .loop
+.do_allocate:
+    ; thread_id:length:data:header
+    ; A is amount to allocate
+    ; B is at length
+    SET C, [B]
+    SUB C, A ; Set C to updated length of remaining free section
+    SUB C, 3 ; Remove new header from free length
+    SET [B], A ; Set selected section's length
+    SET [B + 0xFFFF], [current_thread_id] ; Set selected section's thread ID
+    ADD B, 1
+    SET PUSH, B ; PUSH the return value (the first byte of the new section)
+        ADD B, [B + 0xFFFF] ; Move B to the end of the allocated section
+        SET [B], PEEK ; Write the header address
+        SUB [B], 2 ; Adjust the written value
+        IFL C, 3
+            SET PC, .finish_gapless ; If the remaining space is too small, fill it in
+        ADD B, 1
+        SET [B], -1 ; Set the free section's ID
+        SET [B + 1], C ; SET the free section's length
+        SET PUSH, B ; PUSH the free section header pointer
+        ADD B, [B + 1] ; Move to free section footer
+        ADD B, 2
+        SET [B], POP ; Write header address
+.finish:
+    SET A, POP
+    SET PC, POP
+.finish_gapless:
+    ADD B, C
+    SET [B], PEEK
+    SET B, PEEK
+    ADD [B + 1], C
+    SET A, POP
+    SET PC, POP

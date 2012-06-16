@@ -10,6 +10,13 @@ kernel_start:
     JSR kernel_format_userspace
     JSR configure_system_clock
     
+    SET A, 100
+    JSR alloc_mem
+    SET [A], 0x1234
+    SET [current_thread_id], 1
+    SET A, 50
+    JSR alloc_mem
+    
 inf_loop:
     SET PC, inf_loop
     
@@ -22,7 +29,7 @@ configure_system_clock:
     SUB B, 1
 .loop:
     IFE B, -1
-        SUB PC, 1 ; No clock connected means 0x42c-kernel cannot work, so we just crash forever
+        SET PC, .noclock
     SET PUSH, B
         HWQ B
         SET C, clock_driver_table
@@ -45,6 +52,10 @@ configure_system_clock:
     SET Y, POP
     SET X, POP
     SET PC, POP
+
+.noclock:
+    ; Without a compatible clock, the kernel cannot function.
+    SET PC, .noclock
     
 ; A table of supported clock devices
 clock_driver_table:

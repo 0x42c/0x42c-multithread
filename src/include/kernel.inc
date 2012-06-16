@@ -44,7 +44,7 @@
     
 .equ kernel_temp_mem        0x1100
     .equ system_clock           kernel_temp_mem + 1
-    .equ current_thread_id      base_hw_clock + 1
+    .equ current_thread_id      system_clock + 1
     .equ total_loaded_threads   current_thread_id + 1
 .equ kernel_temp_mem_end    0x1400
 .equ os_bootloader          0x1800
