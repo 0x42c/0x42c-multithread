@@ -67,3 +67,46 @@ alloc_mem:
     ADD [B + 1], C
     SET A, POP
     SET PC, POP
+	
+; free_mem(uint16* address)
+free_mem:
+	SET [A + 0xFFFE], -1 ; Set to free
+	SET B, [A + 0xFFFF] ; Size
+	; Try to merge foward
+	SET PUSH, A
+		ADD A, B
+		IFE [A + 1], -1
+			SET PC, .merge_foward
+	SET A, POP
+.check_backward:
+	; Try to merge backward
+	SUB A, 3
+	IFG userspace_memory, A
+		SET PC, POP
+	; [A] is footer of previous section
+	SET B, [A + 2]
+	SET A, [A]
+	IFE [A], -1
+		SET PC, .merge_backward
+	SET PC, POP
+.merge_foward:
+	ADD A, 2 ; points to next section size
+	ADD B, [A]
+	ADD B, 3 ; Update size of free section
+	SET A, POP
+	SET [A + 0xFFFF], B ; Update size of free section
+	SET PUSH, A
+	ADD A, B
+	SET [A], PEEK
+	SUB [A], 2 ; Update footer
+	SET A, POP
+	SET PC, .check_backward
+.merge_backward: ; [A] is first word of previous header
+	ADD [A + 1], 3 ; Update size
+	ADD [A + 1], B ; Again
+	SET PUSH, A ; Push the address
+		ADD A, [A + 1] ; Add the size
+		ADD A, 2
+	SET [A], POP ; Update footer
+	SET PC, POP; Return
+	

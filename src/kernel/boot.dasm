@@ -12,10 +12,17 @@ kernel_start:
     
     SET A, 100
     JSR alloc_mem
-    SET [A], 0x1234
-    SET [current_thread_id], 1
-    SET A, 50
-    JSR alloc_mem
+	SET PUSH, A
+    
+	SET A, 50
+	JSR alloc_mem
+	SET X, A
+	
+	SET A, POP
+	JSR free_mem
+	
+	SET A, X
+	JSR free_mem
     
 inf_loop:
     SET PC, inf_loop
