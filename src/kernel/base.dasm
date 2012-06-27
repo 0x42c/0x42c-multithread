@@ -24,4 +24,6 @@
 #include "util.dasm"
 #include "cryptography.dasm"
 
+#include "testprogram.dasm"
+
 kernel_end:

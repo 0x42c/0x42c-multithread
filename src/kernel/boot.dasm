@@ -10,20 +10,9 @@ kernel_start:
     JSR kernel_format_userspace
     JSR configure_system_clock
     
-    SET A, 100
-    JSR alloc_mem
-	SET PUSH, A
+    ; Load up boot program
     
-	SET A, 50
-	JSR alloc_mem
-	SET X, A
-	
-	SET A, POP
-	JSR free_mem
-	
-	SET A, X
-	JSR free_mem
-    
+
 inf_loop:
     SET PC, inf_loop
     
@@ -80,4 +69,3 @@ configure_generic_clock:
     SET B, [system_clock]
     HWI [system_clock] ; Set interrupt
     SET PC, POP
-    
